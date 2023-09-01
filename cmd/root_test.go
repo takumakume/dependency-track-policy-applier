@@ -139,7 +139,20 @@ func Test_desierdTags(t *testing.T) {
 		args args
 		want []dtrack.Tag
 	}{
-		// TODO: Add test cases.
+		{
+			name: "Empty slice",
+			args: args{
+				tagSlice: []string{},
+			},
+			want: []dtrack.Tag{},
+		},
+		{
+			name: "Non-empty slice",
+			args: args{
+				tagSlice: []string{"tag1", "tag2"},
+			},
+			want: []dtrack.Tag{{Name: "tag1"}, {Name: "tag2"}},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -209,7 +222,36 @@ func Test_compareTags(t *testing.T) {
 		wantRemove []dtrack.Tag
 		wantAdd    []dtrack.Tag
 	}{
-		// TODO: Add test cases.
+		{
+			name: "No differences",
+			args: args{
+				aa: []dtrack.Tag{
+					{Name: "tag1"},
+					{Name: "tag2"},
+				},
+				bb: []dtrack.Tag{
+					{Name: "tag1"},
+					{Name: "tag2"},
+				},
+			},
+			wantRemove: []dtrack.Tag(nil),
+			wantAdd:    []dtrack.Tag(nil),
+		},
+		{
+			name: "Differences",
+			args: args{
+				aa: []dtrack.Tag{
+					{Name: "tag1"},
+					{Name: "tag2"},
+				},
+				bb: []dtrack.Tag{
+					{Name: "tag1"},
+					{Name: "tag3"},
+				},
+			},
+			wantRemove: []dtrack.Tag{{Name: "tag2"}},
+			wantAdd:    []dtrack.Tag{{Name: "tag3"}},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -235,16 +277,45 @@ func Test_compareUUIDs(t *testing.T) {
 		wantRemove []uuid.UUID
 		wantAdd    []uuid.UUID
 	}{
-		// TODO: Add test cases.
+		{
+			name: "No differences",
+			args: args{
+				aa: []uuid.UUID{
+					uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+					uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+				},
+				bb: []uuid.UUID{
+					uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+					uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+				},
+			},
+			wantRemove: []uuid.UUID(nil),
+			wantAdd:    []uuid.UUID(nil),
+		},
+		{
+			name: "Differences",
+			args: args{
+				aa: []uuid.UUID{
+					uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+					uuid.MustParse("00000000-0000-0000-0000-000000000002"),
+				},
+				bb: []uuid.UUID{
+					uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+					uuid.MustParse("00000000-0000-0000-0000-000000000003"),
+				},
+			},
+			wantRemove: []uuid.UUID{uuid.MustParse("00000000-0000-0000-0000-000000000002")},
+			wantAdd:    []uuid.UUID{uuid.MustParse("00000000-0000-0000-0000-000000000003")},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			gotRemove, gotAdd := compareUUIDs(tt.args.aa, tt.args.bb)
 			if !reflect.DeepEqual(gotRemove, tt.wantRemove) {
-				t.Errorf("compareUUIDs() gotRemove = %v, want %v", gotRemove, tt.wantRemove)
+				t.Errorf("compareUUIDs() gotRemove = %#v, want %#v", gotRemove, tt.wantRemove)
 			}
 			if !reflect.DeepEqual(gotAdd, tt.wantAdd) {
-				t.Errorf("compareUUIDs() gotAdd = %v, want %v", gotAdd, tt.wantAdd)
+				t.Errorf("compareUUIDs() gotAdd = %+v, want %+v", gotAdd, tt.wantAdd)
 			}
 		})
 	}
