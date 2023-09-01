@@ -6,8 +6,10 @@ import (
 	"testing"
 
 	dtrack "github.com/DependencyTrack/client-go"
+	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/takumakume/dependency-track-policy-applier/dependencytrack"
+	"github.com/takumakume/dependency-track-policy-applier/mock"
 	"github.com/takumakume/dependency-track-policy-applier/pkg"
 )
 
@@ -86,8 +88,12 @@ func Test_applyProjects(t *testing.T) {
 }
 
 func Test_applyPolicyConditions(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockClient := mock.NewMockDependencyTrackClient(ctrl)
+
 	type args struct {
-		ctx        context.Context
 		client     dependencytrack.DependencyTrackClient
 		policy     dtrack.Policy
 		conditions []dtrack.PolicyCondition
@@ -97,11 +103,52 @@ func Test_applyPolicyConditions(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "Empty conditions",
+			args: args{
+				client: mockClient,
+				policy: dtrack.Policy{
+					UUID:           uuid.MustParse("00000000-0000-0000-0000-000000000001"),
+					Name:           "policy1",
+					Operator:       dtrack.PolicyOperatorAny,
+					ViolationState: dtrack.PolicyViolationStateFail,
+					PolicyConditions: []dtrack.PolicyCondition{
+						{
+							UUID:     uuid.MustParse("10000000-0000-0000-0000-000000000001"),
+							Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+							Operator: dtrack.PolicyConditionOperatorIs,
+							Value:    "CVE-2021-1234",
+						},
+					},
+				},
+				conditions: []dtrack.PolicyCondition{
+					{
+						Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+						Operator: dtrack.PolicyConditionOperatorIs,
+						Value:    "CVE-2022-1234",
+					},
+				},
+			},
+			wantErr: false,
+		},
 	}
+
+	// Define the mock behavior
+	mockClient.EXPECT().DeletePolicyCondition(gomock.Any(), uuid.MustParse("10000000-0000-0000-0000-000000000001")).Return(nil)
+	mockClient.EXPECT().CreatePolicyCondition(gomock.Any(), uuid.MustParse("00000000-0000-0000-0000-000000000001"), dtrack.PolicyCondition{
+		Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+		Operator: dtrack.PolicyConditionOperatorIs,
+		Value:    "CVE-2022-1234",
+	}).Return(dtrack.PolicyCondition{
+		Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+		Operator: dtrack.PolicyConditionOperatorIs,
+		Value:    "CVE-2022-1234",
+	}, nil)
+
+	ctx := context.Background()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := applyPolicyConditions(tt.args.ctx, tt.args.client, tt.args.policy, tt.args.conditions); (err != nil) != tt.wantErr {
+			if err := applyPolicyConditions(ctx, tt.args.client, tt.args.policy, tt.args.conditions); (err != nil) != tt.wantErr {
 				t.Errorf("applyPolicyConditions() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -119,7 +166,19 @@ func Test_desierdPolicy(t *testing.T) {
 		args args
 		want dtrack.Policy
 	}{
-		// TODO: Add test cases.
+		{
+			name: "Non-empty values",
+			args: args{
+				policyName:     "policy1",
+				operator:       "ANY",
+				violationState: "INFO",
+			},
+			want: dtrack.Policy{
+				Name:           "policy1",
+				Operator:       "ANY",
+				ViolationState: "INFO",
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
