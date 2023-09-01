@@ -41,6 +41,17 @@ $ echo '[
 2023/09/01 12:42:46 apply policyConditions: remove policyCondition: VULNERABILITY_ID IS "CVE-2023-22222"
 ```
 
+
+## Dependency-Track API key
+
+Admin > Access Management > Teams
+
+Permissions:
+
+- POLICY_MANAGEMENT 
+- PORTFOLIO_MANAGEMENT 
+- VIEW_PORTFOLIO 
+
 ## Policy format
 
 ### JSON
