@@ -360,8 +360,8 @@ func Test_comparePolicyConditions(t *testing.T) {
 					},
 				},
 			},
-			wantRemoved: []dtrack.PolicyCondition{},
-			wantAdded:   []dtrack.PolicyCondition{},
+			wantRemoved: []dtrack.PolicyCondition(nil),
+			wantAdded:   []dtrack.PolicyCondition(nil),
 		},
 		{
 			name: "Differences",
