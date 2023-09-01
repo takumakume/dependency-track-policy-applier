@@ -30,6 +30,7 @@ builds:
     - CGO_ENABLED=0
   goos:
     - darwin
+    - linux
   goarch:
     - arm64
   ldflags:
@@ -42,16 +43,43 @@ changelog:
   skip: true
 dockers:
   -
+    use: buildx
     goos: linux
     goarch: amd64
     image_templates:
-      - 'docker.io/takumakume/dependency-track-policy-applier:{{ .Version }}'
-      - 'docker.io/takumakume/dependency-track-policy-applier:latest'
+      - 'docker.io/takumakume/dependency-track-policy-applier:{{ .Version }}-amd64'
+      - 'docker.io/takumakume/dependency-track-policy-applier:latest-amd64'
     dockerfile: Dockerfile
     build_flag_templates:
+      - "--platform=linux/amd64"
       - "--pull"
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.name={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source=https://github.com/takumakume/dependency-track-policy-applier"
+  -
+    use: buildx
+    goos: linux
+    goarch: arm64
+    image_templates:
+      - 'docker.io/takumakume/dependency-track-policy-applier:{{ .Version }}-arm64'
+      - 'docker.io/takumakume/dependency-track-policy-applier:latest-arm64'
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--platform=linux/arm64"
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source=https://github.com/takumakume/dependency-track-policy-applier"
+docker_manifests:
+  - name_template: 'docker.io/takumakume/dependency-track-policy-applier:latest'
+    image_templates:
+      - docker.io/takumakume/dependency-track-policy-applier:latest-amd64
+      - docker.io/takumakume/dependency-track-policy-applier:latest-arm64
+  - name_template: frozenbonito/helloworld:{{ .Version }}
+    image_templates:
+      - docker.io/takumakume/dependency-track-policy-applier:{{ .Version }}-amd64
+      - docker.io/takumakume/dependency-track-policy-applier:{{ .Version }}-arm64
