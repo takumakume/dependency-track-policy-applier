@@ -34,7 +34,7 @@ $ echo '[
     "operator": "IS",
     "value": "CVE-2023-11111"
   }
-]' | DT_API_KEY=8hMyrHETWeLvnYvzn1EFjSw0GWdxqkUE ./dependency-track-policy-applier --policy-name myPolicy 
+]' | DT_API_KEY="..." dependency-track-policy-applier --policy-name myPolicy 
 
 2023/09/01 12:42:46 apply tags: remove tag "foo"
 2023/09/01 12:42:46 apply projects: remove project 451b427e-cd46-45f0-98eb-63705c4dc624
@@ -43,7 +43,6 @@ $ echo '[
 
 ## case: Generate Policy based on KEV (Known Exploited Vulnerabilities)
 
-Can be executed periodically and new KEVs can be defined as Dependency Track policies.
 
 ```shell
 $ curl https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json | \
