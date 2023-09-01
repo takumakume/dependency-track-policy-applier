@@ -153,8 +153,8 @@ func init() {
 	flags.StringP("base-url", "u", "http://127.0.0.1:8081/", "Dependency Track base URL (env: DT_BASE_URL)")
 	flags.StringP("api-key", "k", "", "Dependency Track API key (env: DT_API_KEY)")
 	flags.StringP("policy-name", "", "", "Dependency Track policy name")
-	flags.StringP("policy-operator", "", string(dtrack.PolicyOperatorAny), fmt.Sprintf("Dependency Track policy operator (%v)", []dtrack.PolicyOperator{dtrack.PolicyOperatorAny, dtrack.PolicyOperatorAll}))
-	flags.StringP("policy-violation-state", "", string(dtrack.PolicyViolationStateFail), fmt.Sprintf("Dependency Track policy violationState (%v)", []dtrack.PolicyViolationState{dtrack.PolicyViolationStateFail, dtrack.PolicyViolationStateWarn, dtrack.PolicyViolationStateInfo}))
+	flags.StringP("policy-operator", "", string(dtrack.PolicyOperatorAny), fmt.Sprintf("Dependency Track policy operator %v", []dtrack.PolicyOperator{dtrack.PolicyOperatorAny, dtrack.PolicyOperatorAll}))
+	flags.StringP("policy-violation-state", "", string(dtrack.PolicyViolationStateFail), fmt.Sprintf("Dependency Track policy violationState %v", []dtrack.PolicyViolationState{dtrack.PolicyViolationStateFail, dtrack.PolicyViolationStateWarn, dtrack.PolicyViolationStateInfo}))
 	flags.StringSliceP("policy-projects", "", []string{}, "Dependency Track policy projects")
 	flags.StringSliceP("policy-tags", "", []string{}, "Dependency Track policy tags")
 
