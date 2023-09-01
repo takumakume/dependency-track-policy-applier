@@ -1,5 +1,5 @@
 FROM alpine:3.18.0
-RUN apk update && apk add --upgrade libcrypto3 libssl3 curl jq
+RUN apk update && apk add --upgrade libcrypto3 libssl3 curl jq git
 
 COPY dependency-track-policy-applier /usr/local/bin/dependency-track-policy-applier
 
