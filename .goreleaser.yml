@@ -79,7 +79,7 @@ docker_manifests:
     image_templates:
       - docker.io/takumakume/dependency-track-policy-applier:latest-amd64
       - docker.io/takumakume/dependency-track-policy-applier:latest-arm64
-  - name_template: frozenbonito/helloworld:{{ .Version }}
+  - name_template: docker.io/takumakume/dependency-track-policy-applier:{{ .Version }}
     image_templates:
       - docker.io/takumakume/dependency-track-policy-applier:{{ .Version }}-amd64
       - docker.io/takumakume/dependency-track-policy-applier:{{ .Version }}-arm64
