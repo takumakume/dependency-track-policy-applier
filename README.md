@@ -41,6 +41,52 @@ $ echo '[
 2023/09/01 12:42:46 apply policyConditions: remove policyCondition: VULNERABILITY_ID IS "CVE-2023-22222"
 ```
 
+## Policy format
+
+### JSON
+
+```json
+[
+  {
+    "subject": "VULNERABILITY_ID",
+    "operator": "IS",
+    "value": "CVE-2023-11111"
+  },
+  {
+    "subject": "VULNERABILITY_ID",
+    "operator": "IS",
+    "value": "CVE-2023-22222"
+  }
+]
+```
+
+- `subject`
+  - "AGE"
+  - "COORDINATES"
+  - "CPE"
+  - "LICENSE"
+  - "LICENSE_GROUP"
+  - "PACKAGE_URL"
+  - "SEVERITY"
+  - "SWID_TAGID"
+  - "VERSION"
+  - "COMPONENT_HASH"
+  - "CWE"
+  - "VULNERABILITY_ID"
+- `operator`
+  - "IS"
+  - "IS_NOT"
+  - "MATCHES"
+  - "NO_MATCH"
+  - "NUMERIC_GREATER_THAN"
+  - "NUMERIC_LESS_THAN"
+  - "NUMERIC_EQUAL"
+  - "NUMERIC_NOT_EQUAL"
+  - "NUMERIC_GREATER_THAN_OR_EQUAL"
+  - "NUMERIC_LESSER_THAN_OR_EQUAL"
+  - "CONTAINS_ALL"
+  - "CONTAINS_ANY"
+
 ## case: Generate Policy based on KEV (Known Exploited Vulnerabilities)
 
 
