@@ -1,0 +1,57 @@
+before:
+  hooks:
+    - go mod download
+    - go mod tidy
+builds:
+-
+  id: dependency-track-policy-applier-linux
+  env:
+    - CGO_ENABLED=0
+  goos:
+    - linux
+  goarch:
+    - amd64
+  ldflags:
+    - -s -w -X github.com/takumakume/dependency-track-policy-applier/version.Version={{.Version}}
+-
+  id: dependency-track-policy-applier-darwin-windows
+  env:
+    - CGO_ENABLED=0
+  goos:
+    - darwin
+    - windows
+  goarch:
+    - amd64
+  ldflags:
+    - -s -w -X github.com/takumakume/dependency-track-policy-applier/version.Version={{.Version}}
+-
+  id: dependency-track-policy-applier-darwin-arm64
+  env:
+    - CGO_ENABLED=0
+  goos:
+    - darwin
+  goarch:
+    - arm64
+  ldflags:
+    - -s -w -X github.com/takumakume/dependency-track-policy-applier/version.Version={{.Version}}    
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Version }}-dev"
+changelog:
+  skip: true
+dockers:
+  -
+    goos: linux
+    goarch: amd64
+    image_templates:
+      - 'docker.io/takumakume/dependency-track-policy-applier:{{ .Version }}'
+      - 'docker.io/takumakume/dependency-track-policy-applier:latest'
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source=https://github.com/takumakume/dependency-track-policy-applier"
