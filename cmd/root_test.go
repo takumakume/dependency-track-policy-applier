@@ -261,16 +261,89 @@ func Test_comparePolicyConditions(t *testing.T) {
 		wantRemoved []dtrack.PolicyCondition
 		wantAdded   []dtrack.PolicyCondition
 	}{
-		// TODO: Add test cases.
+		{
+			name: "No differences",
+			args: args{
+				aa: []dtrack.PolicyCondition{
+					{
+						Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+						Operator: dtrack.PolicyConditionOperatorIs,
+						Value:    "CVE-2020-1234",
+					},
+					{
+						Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+						Operator: dtrack.PolicyConditionOperatorIs,
+						Value:    "CVE-2021-1234",
+					},
+				},
+				bb: []dtrack.PolicyCondition{
+					{
+						Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+						Operator: dtrack.PolicyConditionOperatorIs,
+						Value:    "CVE-2020-1234",
+					},
+					{
+						Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+						Operator: dtrack.PolicyConditionOperatorIs,
+						Value:    "CVE-2021-1234",
+					},
+				},
+			},
+			wantRemoved: []dtrack.PolicyCondition{},
+			wantAdded:   []dtrack.PolicyCondition{},
+		},
+		{
+			name: "Differences",
+			args: args{
+				aa: []dtrack.PolicyCondition{
+					{
+						Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+						Operator: dtrack.PolicyConditionOperatorIs,
+						Value:    "CVE-2020-1234",
+					},
+					{
+						Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+						Operator: dtrack.PolicyConditionOperatorIs,
+						Value:    "CVE-2021-1234",
+					},
+				},
+				bb: []dtrack.PolicyCondition{
+					{
+						Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+						Operator: dtrack.PolicyConditionOperatorIs,
+						Value:    "CVE-2021-1234",
+					},
+					{
+						Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+						Operator: dtrack.PolicyConditionOperatorIs,
+						Value:    "CVE-2022-1234",
+					},
+				},
+			},
+			wantRemoved: []dtrack.PolicyCondition{
+				{
+					Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+					Operator: dtrack.PolicyConditionOperatorIs,
+					Value:    "CVE-2020-1234",
+				},
+			},
+			wantAdded: []dtrack.PolicyCondition{
+				{
+					Subject:  dtrack.PolicyConditionSubjectVulnerabilityID,
+					Operator: dtrack.PolicyConditionOperatorIs,
+					Value:    "CVE-2022-1234",
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			gotRemoved, gotAdded := comparePolicyConditions(tt.args.aa, tt.args.bb)
 			if !reflect.DeepEqual(gotRemoved, tt.wantRemoved) {
-				t.Errorf("comparePolicyConditions() gotRemoved = %v, want %v", gotRemoved, tt.wantRemoved)
+				t.Errorf("comparePolicyConditions() gotRemoved = %+v, want %+v", gotRemoved, tt.wantRemoved)
 			}
 			if !reflect.DeepEqual(gotAdded, tt.wantAdded) {
-				t.Errorf("comparePolicyConditions() gotAdded = %v, want %v", gotAdded, tt.wantAdded)
+				t.Errorf("comparePolicyConditions() gotAdded = %+v, want %+v", gotAdded, tt.wantAdded)
 			}
 		})
 	}
