@@ -21,8 +21,8 @@ $ echo '[
 2023/09/01 12:00:01 apply policy: create policy: myPolicy
 2023/09/01 12:00:01 apply tags: add tag "foo"
 2023/09/01 12:00:01 apply projects: add project 451b427e-cd46-45f0-98eb-63705c4dc624
-2023/09/01 12:00:01 apply policyConditions: add policyCondition: VULNERABILITY_ID IS "CVE-2023-11111"
-2023/09/01 12:00:01 apply policyConditions: add policyCondition: VULNERABILITY_ID IS "CVE-2023-22222"
+2023/09/01 12:00:01 apply policyConditions: add policyCondition: VULNERABILITY_ID IS "CVE-2014-123456"
+2023/09/01 12:00:01 apply policyConditions: add policyCondition: VULNERABILITY_ID IS "CVE-2014-99999"
 ```
 
 Apply the difference.
@@ -32,7 +32,7 @@ $ echo '[
   {
     "subject": "VULNERABILITY_ID",
     "operator": "IS",
-    "value": "CVE-2014-10000"
+    "value": "CVE-2014-99999"
   }
 ]' | DT_API_KEY="..." dependency-track-policy-applier --policy-name myPolicy 
 
